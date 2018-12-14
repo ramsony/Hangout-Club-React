@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import { Grid, Button } from 'semantic-ui-react'
-import EventList from '../EventList/EventList'
-import EventForm from '../EventForm/EventForm'
+import React, { Component } from 'react';
+import { Grid, Button } from 'semantic-ui-react';
+import cuid from 'cuid';
+import EventList from '../EventList/EventList';
+import EventForm from '../EventForm/EventForm';
 
 const eventsDash = [
   {
@@ -71,13 +72,24 @@ handleFormOpen = ()=> {
  this.setState({
   isOpen:true
  })
-}
+};
 
 handleCancelForm = () =>{
  this.setState({
   isOpen:false
  })
+};
+
+handleCreateEvent = (newEvent) =>{
+  newEvent.id = cuid();
+  newEvent.hostPhotoURL = '/assets/user.png';
+  const updatedEvents = [...this.state.events, newEvent]
+  this.setState({
+    events: updatedEvents,
+    isOpen:false
+  })
 }
+
  render() {
   return(
    <Grid>
@@ -86,7 +98,8 @@ handleCancelForm = () =>{
     </Grid.Column>
     <Grid.Column width={6}>
     <Button onClick={this.handleFormOpen} positive content='Create Event'/>
-    {this.state.isOpen && <EventForm handleCancelForm={this.handleCancelForm}/> }
+    {this.state.isOpen && (
+    <EventForm createEvent={this.handleCreateEvent} handleCancelForm={this.handleCancelForm}/> )}
     </Grid.Column>
    </Grid>
   )
